@@ -75,7 +75,7 @@ def localCover(center,firstL,secondL):
         k = None
         t = 0
         for user in secondL:
-            t = distance(user,u)
+            t = distance(user,center)
             if t < min:
                 k = user
                 min = t
