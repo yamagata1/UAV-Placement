@@ -92,10 +92,38 @@ def localCover(center,firstL,secondL):
             firstL.remove(k)
             return
 
+#向量OA叉积向量OB。大于0表示从OA到OB为逆时针旋转
+def cross(o,a,b):
+    return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0])
+
+#用以找出最低最左边的点
+def compare_position(a,b):
+    return (a[1]<b[1]) or (a[1]==b[1] and a[0]<b[0])
+
+#小于。以eople_list[0]当中心点做角度排序，角度由小排到大（即逆时针方向）。
+#角度相同時，距离中心点较近的点排前面。
+def compare_angle(a,b):
+    global people_list
+    c = cross(people_list[0],a,b)
+    return c>0 or (c==0 and distance(people_list[0],a)  <distance(people_list[0],b))
+
 #解决凸包问题
 #outs 凸包位置list
+#Graham's Scan算法
 def convexHull(users,outs):
-    pass
+    MinIndex = users.index(min(users,key = compare_position))
+    #用最低最左边的点为起点
+    users[0] , users[MinIndex] = users [MinIndex] , users[0]
+    #按角度排序
+    users.sort(key=compare_angle)
+    # m为凸包顶点数目
+    m =0
+    for i in range(len(users)):
+        #擦除凹陷的点
+        while (m>=2 and cross(outs[m-2],outs[m-1],users[i])<=0):
+            m = m-1
+        outs[m] = users[i]
+        m = m+1
 
 def oneCenter(users,center):
     pass
